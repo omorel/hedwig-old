@@ -45,10 +45,12 @@ class DbUser(Base):
 		
 	def set_status(self, status):
 		self.status = status
+		return (True)
 		
 	def set_password(self, password, salt):
 		self.password = password 
 		self.salt = salt
+		return (True)
         
 
 class User():
@@ -67,16 +69,19 @@ class User():
 		
 	def create(self, email, password):
 		valid = True
+		errors = []
 		if(usertools.is_username_valid(getattr(self, 'username', ''))): 
 			self.dbuser = DbUser(getattr(self, 'username', ''))
 		else:
 			self.username = ''
 			valid = False 
+			error.append('invalid_username')
 		
 		if(valid and usertools.is_email_valid(email)): 
 			self.dbuser.email = email
 		else:
 			valid = False 
+			errors.append('invalid_email')
 			
 		if(valid and usertools.is_password_valid(password)): 
 			salt = usertools.generate_salt()
@@ -84,11 +89,13 @@ class User():
 			self.dbuser.set_password(encrypted_password, salt)
 		else:
 			valid = False 
+			errors.append('invalid_password')
 			
 		if (valid): 
 			return self.insert()
 		else:
-			return False
+			return (False, errors)
+			
 		
 	def change_password(self, password):
 		if (usertools.is_password_valid(password)): 
@@ -97,33 +104,33 @@ class User():
 			dbuser.set_password(encrypted_password, salt)
 			return self.update
 		else: 
-			return False
+			return (False, ['invalid_password'])
 			
 	def update(self):
 		try:
 			#TODO: change self.session(self.dbuser) 
 			self.session.commit()
-			return True
+			return (True)
 		except :
 			self.session.rollback()
-			return False		
+			return (False, ['db_update_failed'])
 			
 	def insert(self):
 		try: 
 			self.session.add(self.dbuser)
 			self.session.flush()
 			transaction.commit()
-			return True 
+			return (True) 
 		except: 
 			self.session.rollback()
-			return False 
+			return (False, ['db_insert_failed'])
 			
 	def load(self):
 		self.session.query(DbUser).filter(DbUser.username==self.username).first()
 		
 	def check_password(password):
 		if (usertools.is_password_valid(password)): 
-			pass
+			
 	 	else: 
 			return False 
 
