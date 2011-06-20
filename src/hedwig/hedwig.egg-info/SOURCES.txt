@@ -6,8 +6,10 @@ production.ini
 setup.cfg
 setup.py
 hedwig/__init__.py
+hedwig/constants.py
 hedwig/models.py
 hedwig/tests.py
+hedwig/usertools.py
 hedwig/views.py
 hedwig.egg-info/PKG-INFO
 hedwig.egg-info/SOURCES.txt

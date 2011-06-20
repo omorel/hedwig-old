@@ -1,4 +1,8 @@
-
-/src/Scripts
-/src/Lib
-/nbproject
+src/bin
+src/.Python
+src/Scripts
+src/Lib
+src/include
+src/hedwig/hedwig/*.pyc
+nbproject
+*.swp

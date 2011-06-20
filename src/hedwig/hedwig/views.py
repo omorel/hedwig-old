@@ -1,8 +1,9 @@
 from hedwig.models import DBSession
-from hedwig.models import MyModel
+from hedwig.models import User
 
 def my_view(request):
-    dbsession = DBSession()
-    root = dbsession.query(MyModel).filter(MyModel.name==u'root').first()
-    return {'root':root, 'project':'hedwig'}
+	dbsession = DBSession()
+	root = User(u'olivier')
+	root.load()
+	return {'root':root, 'project':'hedwig'}
 
